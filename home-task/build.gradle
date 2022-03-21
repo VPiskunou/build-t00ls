@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+    implementation 'com.google.guava:guava:30.1.1-jre'
+    implementation 'org.apache.commons:commons-collections4:4.4'
+    implementation 'log4j:log4j:1.2.17'
+}
+
+
+jar {
+    archiveBaseName = 'home-task-gradle'
+    destinationDirectory = file('ci-task-gradle')
+    manifest {
+        attributes 'Main-Class': 'com.test.Project'
+}
+}
+
+task "build_custom" (type:Exec) {
+    commandLine "gradle", "build"
+}
+
+task "test_custom" (type:Exec, dependsOn: build_custom){
+    commandLine "gradle", "test"
+}
+
+task hello (dependsOn: test_custom){
+    doLast {
+        println "Hello World"
+    }
+}
